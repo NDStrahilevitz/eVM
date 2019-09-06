@@ -1,0 +1,98 @@
+ARCHITECTURE:
+
+Word size = 32 bit
+
+Registers: 16 word sized registers, 12 General Use, Flags, Program Counter, Base Pointer and Stack Pointer
+
+MEMORY: 2^16 addresses, all word sized. 
+Stack:        0x0000 - 0x1fff
+Heap:         0x2000 - 0x5fff
+Data Segment: 0x6000 - 0x7fff   
+Code Segment: 0x8000 - 0xffff
+
+OPERATIONS:
+
+The OPERATIONS are the machine specification for the assembly lagnuage INSTRUCTIONS, 
+for exmaple MOVRI is the specific OPERATION for a MOV INSTRUCTION with a REGISTER as destination and an IMMEDIATE VALUE as source.
+
+Word sized, design:
+                            32 bits
+|---------------------------------------------------------------|
+|          |  if is dest |             immediate                |         
+|  opcode  |   register  |            20 bit value              |
+|          |             |                                      |
+|---------------------------------------------------------------|
+    8 bits    4 bits               20 bits
+
+Note that some INSTRUCTIONS may have an OPCODE for larger than 20bit values that will include a jump to the next ADDRESS stored in the CODE SEGMENT.
+
+OPCODES:
+
+END:   Labels end of code
+NOP:   Move to next instruction
+
+PUSH:
+PUSHI: Pushes immediate value to stack
+PUSHL: Pushes 32bit value to stack
+PUSHR: Pushes value from register
+PUSHM: Pushes value from memory address
+
+POP:  
+POPR: Pops value to register
+POPM: Pops value to memory address
+
+MOV:
+MOVRI: Moves immediate value to register
+MOVRL: Moves 32bit value to register
+MOVRR: Moves from register to register
+MOVRM: Moves from memory to register
+MOVMI: Moves immediate value to memory address
+MOVML: Moves 32bit value to memory address
+MOVMR: Moves from register to memory address
+MOVMM: Moves from memory to memory address
+
+ADD:
+ADDRI: Adds immediate value to register
+ADDRL: Adds 32bit value to register
+ADDRR: Adds from register to register
+ADDRM: Adds value from memory to register
+ADDMI: Adds immediate value to memory address
+ADDML: Adds 32bit value to memory address
+ADDMR: Adds from register to memory address
+ADDMM: Adds value from memory to memory address
+
+(Same opcodes specification for SUB, MUL and DIV instructions)
+
+CMP: 
+CMPRI: Compares immediate value to register
+CMPRL: Compares 32bit value to register
+CMPRR: Compares from register to register
+CMPRM: Compares value from memory to register
+CMPMI: Compares immediate value to memory address
+CMPML: Compares 32bit value to memory address
+CMPMR: Compares from register to memory address
+CMPMM: Compares value from memory to memory address
+
+JMP:  Jumps to memory address
+JNZ:  Jumps to memory address if ZF is 0
+JZ:   Jumps to memory address if ZF is 1
+JIG:  Jumps to memory address if CF is 1
+JIL:  Jumps to memory address if NF is 1
+
+NOT:
+NOTR:  Logical NOT on value in register
+NOTM:  Logical NOT on value in memory address
+
+AND:
+ANDRI: Logical end between immediate value to register
+ANDRL: Logical end between 32bit value to register
+ANDRR: Logical end between register to register
+ANDRM: Logical end between value from memory to register
+ANDMI: Logical end between immediate value to memory address
+ANDML: Logical end between 32bit value to memory address
+ANDMR: Logical end between register to memory address
+ANDMM: Logical end between value from memory to memory address
+
+(Same opcode specification OR and XOR instruction)
+
+

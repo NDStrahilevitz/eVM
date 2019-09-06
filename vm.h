@@ -1,24 +1,35 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "stack.h"
-
 #ifndef VM_H_
 #define VM_H_
 
-//define opcodes
+#include "stdio.h"
+#include "stdlib.h"
+#include "stdint.h"
+
+//opcodes definition
 typedef enum{
-    END = 0, NOP, MOV, 
-    PUSH = 10, POP, 
-    ADD = 20, SUB, MUL, DIV, 
-    TEST = 30, JMP, JNZ, JZ,
-    NOT = 40, AND, OR, XOR,
-    PRINT = 50
+    END = 0x0, NOP, 
+    PUSHI, PUSHL, PUSHR, PUSHM, 
+    POPR, POPM,
+    MOVRI, MOVRL, MOVRR, MOVRM, MOVMI, MOVML, MOVMR, MOVMM,
+    ADDRI, ADDRL, ADDRR, ADDRM, ADDMI, ADDML, ADDMR, ADDMM, 
+    SUBRI, SUBRL, SUBRR, SUBRM, SUBMI, SUBML, SUBMR, SUBMM, 
+    MULRI, MULRL, MULRR, MULRM, MULMI, MULML, MULMR, MULMM, 
+    DIVRI, DIVRL, DIVRR, DIVRM, DIVMI, DIVML, DIVMR, DIVMM, 
+    CMPRI, CMPRL, CMPRR, CMPRM, CMPMI, CMPML, CMPMR, CMPMM,
+    JMP, JNZ, JZ, JIG, JIL,
+    NOTR, NOTM,
+    ANDRI, ANDRL, ANDRR, ANDRM, ANDMI, ANDML, ANDMR, ANDMM, 
+    ORRI, ORRL, ORRR, ORRM, ORMI, ORML, ORMR, ORMM,
+    XORRI, XORRL, XORRR, XORRM, XORMI, XORML, XORMR, XORMM
 } OPCODE;
 
 /*
     R0 - ACCUMULATOR
     R1 - ACCUMULTOR
-    R12 - FLAGS
+    FL - FLAGS
+    PC - PROGRAM COUNTER 
+    BP - BASE POINTER
+    SP - STACK POINTER
  */
 typedef enum{
     R0,
@@ -33,19 +44,32 @@ typedef enum{
     R9,
     R10,
     R11,
-    R12,
-    R13,
-    R14,
-    R15,
+    FL,
+    PC,
+    BP,
+    SP,
     REGS_NUMBER
 } REGISTER;
 
-typedef struct vm{
+typedef enum{
+    NF,
+    ZF,
+    CF
+} FLAG;
+
+typedef struct {
     uint32_t memory[0xffff];
-    Stack* stack;
     uint32_t registers[REGS_NUMBER];
-    uint32_t* p_counter;
-    uint32_t* st_ptr;
-} VM;
+    int running;
+} vm_t;
+
+vm_t* vm_init();
+void vm_destroy();
+
+void vm_clear_flag(vm_t* vm, FLAG flag);
+int vm_read_flag(const vm_t* vm);
+void vm_set_flag(vm_t* vm);
+
+void vm_cpu_cycle(vm_t* vm);
 
 #endif

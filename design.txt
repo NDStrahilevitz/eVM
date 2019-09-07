@@ -70,7 +70,6 @@ ADDRI: Adds immediate value to register
 ADDRL: Adds 32bit value to register
 ADDRR: Adds from register to register
 ADDRM: Adds value from memory to register
-ADDMI: Adds immediate value to memory address
 ADDML: Adds 32bit value to memory address
 ADDMR: Adds from register to memory address
 ADDMM: Adds value from memory to memory address
@@ -83,16 +82,21 @@ CMPRI: Compares immediate value to register
 CMPRL: Compares 32bit value to register
 CMPRR: Compares from register to register
 CMPRM: Compares value from memory to register
-CMPMI: Compares immediate value to memory address
 CMPML: Compares 32bit value to memory address
 CMPMR: Compares from register to memory address
 CMPMM: Compares value from memory to memory address
 
 JMP:  Jumps to memory address
-JNZ:  Jumps to memory address if ZF is 0
-JZ:   Jumps to memory address if ZF is 1
-JIG:  Jumps to memory address if CF is 1
-JIL:  Jumps to memory address if NF is 1
+JNZ:  Jumps to memory address if ZF = 0
+JZ:   Jumps to memory address if ZF = 1
+JG:   Signed > check, works if ZF = 0 and NF = OF
+JGE:  Signed >= check, works if NF = OF
+JL:   Signed < check, works if NF != OF
+JLE:  Signed <= check, works if ZF = 0 or NF != OF
+JA:   Unsigned > check, works if CF = 0
+JAE:  Unsigned >= check, works if CF = 0 or ZF = 1
+JB:   Unsigned < check, works if CF = 1
+JBE:  Unsigned >= check, works if CF = 1 or ZF = 1
 
 NOT:
 NOTR:  Logical NOT on value in register
@@ -103,7 +107,6 @@ ANDRI: Logical end between immediate value to register
 ANDRL: Logical end between 32bit value to register
 ANDRR: Logical end between register to register
 ANDRM: Logical end between value from memory to register
-ANDMI: Logical end between immediate value to memory address
 ANDML: Logical end between 32bit value to memory address
 ANDMR: Logical end between register to memory address
 ANDMM: Logical end between value from memory to memory address

@@ -2,9 +2,11 @@
 #include "operations.h"
 #include "exitcodes.h"
 
-vm_t* vm_init(){
-    vm_t* new_vm = (vm_t*)malloc(sizeof(vm_t*));
-    new_vm->running = 1;
+#include "stdio.h"
+
+vm_t* vm_create(){
+    vm_t* new_vm = (vm_t*)malloc(sizeof(vm_t));
+    new_vm->running = 0;
 
     return new_vm;
 }
@@ -22,6 +24,34 @@ int vm_read_flag(const vm_t* vm, FLAG flag){
 
 void vm_set_flag(vm_t* vm, FLAG flag){
     vm->registers[FL] |= 1U << flag; 
+}
+
+void print_vm_details(vm_t* vm){
+    printf("Registers Status:\n");
+    printf("R0:     0x%08x\n", vm->registers[R0]);
+    printf("R1:     0x%08x\n", vm->registers[R1]);
+    printf("R2:     0x%08x\n", vm->registers[R2]);
+    printf("R3:     0x%08x\n", vm->registers[R3]);
+    printf("R4:     0x%08x\n", vm->registers[R4]);
+    printf("R5:     0x%08x\n", vm->registers[R5]);
+    printf("R6:     0x%08x\n", vm->registers[R6]);
+    printf("R7:     0x%08x\n", vm->registers[R7]);
+    printf("R8:     0x%08x\n", vm->registers[R8]);
+    printf("R9:     0x%08x\n", vm->registers[R9]);
+    printf("R10:    0x%08x\n", vm->registers[R10]);
+    printf("R11:    0x%08x\n", vm->registers[R11]);
+    printf("FL:     0x%08x\n", vm->registers[FL]);
+    printf("PC:     0x%08x\n", vm->registers[PC]);
+    printf("BP:     0x%08x\n", vm->registers[BP]);
+    printf("SP:     0x%08x\n", vm->registers[SP]);
+
+    printf("Flags Status:\n");
+    printf("OF:     %d\n", vm_read_flag(vm, OF));
+    printf("ZF:     %d\n", vm_read_flag(vm, ZF));
+    printf("NF:     %d\n", vm_read_flag(vm, NF));
+    printf("CF:     %d\n", vm_read_flag(vm, CF));
+    
+    
 }
 
 void vm_run(vm_t* vm){

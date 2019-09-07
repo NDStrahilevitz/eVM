@@ -65,12 +65,14 @@ typedef struct vm{
     int running;
 } vm_t;
 
-vm_t* vm_init();
+vm_t* vm_create();
 void vm_destroy(vm_t* vm);
 
 void vm_clear_flag(vm_t* vm, FLAG flag);
 int vm_read_flag(const vm_t* vm, FLAG flag);
 void vm_set_flag(vm_t* vm, FLAG flag);
+
+void print_vm_details(vm_t* vm);
 
 void vm_run(vm_t* vm);
 void vm_cpu_cycle(vm_t* vm);

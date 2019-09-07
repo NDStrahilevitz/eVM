@@ -165,10 +165,9 @@ void vm_xor(vm_t* vm, uint32_t* dest, const uint32_t* arg){
 }
 
 void vm_ri_op(vm_t* vm, uint32_t instruction, void (*ri_func)(vm_t*, uint32_t*, const uint32_t*)){
-    uint32_t* val;
-    *val = instruction & 0xfffff;
+    uint32_t val = instruction & 0xfffff;
     uint32_t* reg = &vm->registers[instruction >> 20 & 0xf];
-    ri_func(vm, reg, val);
+    ri_func(vm, reg, &val);
 }
 void vm_rl_op(vm_t* vm, uint32_t instruction, void (*rl_func)(vm_t*, uint32_t*, const uint32_t*)){
     uint32_t* reg = &vm->registers[instruction >> 20 & 0xf];

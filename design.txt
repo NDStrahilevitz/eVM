@@ -10,10 +10,11 @@ R1 - Accumulator.
 
 FLAGS:
 
-the FLAGS are set after any arithmetic calculation, logical comparison and a CMP instruction.
+the FLAGS are set after a ADD, SUB, AND, OR, XOR and CMP INSTRUCTION.
 
 ZF - indicates wether the latest calculation resulted in 0.
 NF - indicates wether the most signifact bit was set in the last calculation.
+CF - indicates wether the last calculation has a carry.
 OF - indicates wether the latest calculation overflowed.
 
 
@@ -75,6 +76,7 @@ ADDMR: Adds from register to memory address
 ADDMM: Adds value from memory to memory address
 
 (Same opcodes specification for SUB, MUL and DIV instructions)
+(MUL and DIV have corresponding IMUL and IDIV INSTRUCTIONS for signed calculations)
 
 CMP: 
 CMPRI: Compares immediate value to register

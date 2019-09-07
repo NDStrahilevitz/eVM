@@ -2,7 +2,20 @@ ARCHITECTURE:
 
 Word size = 32 bit
 
-Registers: 16 word sized registers, 12 General Use, Flags, Program Counter, Base Pointer and Stack Pointer
+REGISTERS: 16 word sized registers, 12 General Use, Flags, Program Counter, Base Pointer and Stack Pointer
+
+GENERAL USE:
+R0 - Accumulator, by standard stores return values.
+R1 - Accumulator.
+
+FLAGS:
+
+the FLAGS are set after any arithmetic calculation, logical comparison and a CMP instruction.
+
+ZF - indicates wether the latest calculation resulted in 0.
+NF - indicates wether the most signifact bit was set in the last calculation.
+OF - indicates wether the latest calculation overflowed.
+
 
 MEMORY: 2^16 addresses, all word sized. 
 Stack:        0x0000 - 0x1fff

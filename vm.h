@@ -1,7 +1,6 @@
 #ifndef VM_H_
 #define VM_H_
 
-#include "stdio.h"
 #include "stdlib.h"
 #include "stdint.h"
 
@@ -14,7 +13,9 @@ typedef enum{
     ADDRI, ADDRL, ADDRR, ADDRM, ADDMI, ADDML, ADDMR, ADDMM, 
     SUBRI, SUBRL, SUBRR, SUBRM, SUBMI, SUBML, SUBMR, SUBMM, 
     MULRI, MULRL, MULRR, MULRM, MULMI, MULML, MULMR, MULMM, 
-    DIVRI, DIVRL, DIVRR, DIVRM, DIVMI, DIVML, DIVMR, DIVMM, 
+    DIVRI, DIVRL, DIVRR, DIVRM, DIVMI, DIVML, DIVMR, DIVMM,
+    IMULRI, IMULRL, IMULRR, IMULRM, IMULMI, IMULML, IMULMR, IMULMM, 
+    IDIVRI, IDIVRL, IDIVRR, IDIVRM, IDIVMI, IDIVML, IDIVMR, IDIVMM,  
     CMPRI, CMPRL, CMPRR, CMPRM, CMPMI, CMPML, CMPMR, CMPMM,
     JMP, JNZ, JZ, JIG, JIL,
     NOTR, NOTM,
@@ -52,24 +53,26 @@ typedef enum{
 } REGISTER;
 
 typedef enum{
-    NF,
+    OF,
     ZF,
+    NF,
     CF
 } FLAG;
 
-typedef struct {
+typedef struct vm{
     uint32_t memory[0xffff];
     uint32_t registers[REGS_NUMBER];
     int running;
 } vm_t;
 
 vm_t* vm_init();
-void vm_destroy();
+void vm_destroy(vm_t* vm);
 
 void vm_clear_flag(vm_t* vm, FLAG flag);
-int vm_read_flag(const vm_t* vm);
-void vm_set_flag(vm_t* vm);
+int vm_read_flag(const vm_t* vm, FLAG flag);
+void vm_set_flag(vm_t* vm, FLAG flag);
 
+void vm_run(vm_t* vm);
 void vm_cpu_cycle(vm_t* vm);
 
 #endif

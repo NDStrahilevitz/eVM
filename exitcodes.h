@@ -5,6 +5,8 @@ typedef enum{
     SUCCESS,
     UNKNOWN_ERROR,
     SEGMENTATION_FAULT,
+    NOT_YET_IMPLEMENTED,
+    OPCODE_NOT_EXIST
 } ERROR_CODES;
 
 #endif

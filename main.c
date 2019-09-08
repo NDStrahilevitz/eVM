@@ -9,4 +9,5 @@ int main(){
     vm_set_flag(vm, OF);
     vm_set_flag(vm, NF);
     print_vm_details(vm);
+    vm_destroy(vm);
 }

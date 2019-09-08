@@ -1,8 +1,10 @@
+#include "stdlib.h"
+#include "stdio.h"
+
 #include "vm.h"
 #include "operations.h"
 #include "exitcodes.h"
 
-#include "stdio.h"
 
 vm_t* vm_create(){
     vm_t* new_vm = (vm_t*)malloc(sizeof(vm_t));
@@ -85,13 +87,6 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case PUSHM:{
-            uint32_t address = instruction & 0xffff;
-            uint32_t val = vm->memory[address];
-            vm_push(vm, val);
-            break;
-        }
-
         case PUSHR:{
             uint32_t reg = instruction >> 20 & 0xf;
             uint32_t val = vm->registers[reg];
@@ -99,16 +94,9 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case POPM:{
-            uint32_t* address = &vm->memory[instruction & 0xffff];
-            vm_pop(vm, address);
-            break;
-        }
-
-        case POPR:{
-            uint32_t* reg = &vm->registers[instruction >> 20 & 0xf];
+        case POP:{
+            REGISTER reg = (instruction >> 20) & 0xf;
             vm_pop(vm, reg);
-            break;
         }
 
         case MOVRI:{
@@ -121,28 +109,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case MOVRM:{
-            vm_rm_op(vm, instruction, vm_mov);
-            break;
-        }
-
         case MOVRR:{
             vm_rr_op(vm, instruction, vm_mov);
-            break;
-        }
-
-        case MOVML:{
-            vm_ml_op(vm, instruction, vm_mov);
-            break;
-        }
-
-        case MOVMM:{
-            vm_mm_op(vm, instruction, vm_mov);
-            break;
-        }
-
-        case MOVMR:{
-            vm_mr_op(vm, instruction, vm_mov);
             break;
         }
 
@@ -156,28 +124,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case ADDRM:{
-            vm_rm_op(vm, instruction, vm_add);
-            break;
-        }
-
         case ADDRR:{
             vm_rr_op(vm, instruction, vm_add);
-            break;
-        }
-
-        case ADDML:{
-            vm_ml_op(vm, instruction, vm_add);
-            break;
-        }
-
-        case ADDMM:{
-            vm_mm_op(vm, instruction, vm_add);
-            break;
-        }
-
-        case ADDMR:{
-            vm_mr_op(vm, instruction, vm_add);
             break;
         }
 
@@ -191,28 +139,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case SUBRM:{
-            vm_rm_op(vm, instruction, vm_sub);
-            break;
-        }
-
         case SUBRR:{
             vm_rr_op(vm, instruction, vm_sub);
-            break;
-        }
-
-        case SUBML:{
-            vm_ml_op(vm, instruction, vm_sub);
-            break;
-        }
-
-        case SUBMM:{
-            vm_mm_op(vm, instruction, vm_sub);
-            break;
-        }
-
-        case SUBMR:{
-            vm_mr_op(vm, instruction, vm_sub);
             break;
         }
 
@@ -226,28 +154,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case MULRM:{
-            vm_rm_op(vm, instruction, vm_mul);
-            break;
-        }
-
         case MULRR:{
             vm_rr_op(vm, instruction, vm_mul);
-            break;
-        }
-
-        case MULML:{
-            vm_ml_op(vm, instruction, vm_mul);
-            break;
-        }
-
-        case MULMM:{
-            vm_mm_op(vm, instruction, vm_mul);
-            break;
-        }
-
-        case MULMR:{
-            vm_mr_op(vm, instruction, vm_mul);
             break;
         }
 
@@ -261,28 +169,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case DIVRM:{
-            vm_rm_op(vm, instruction, vm_div);
-            break;
-        }
-
         case DIVRR:{
             vm_rr_op(vm, instruction, vm_div);
-            break;
-        }
-
-        case DIVML:{
-            vm_ml_op(vm, instruction, vm_div);
-            break;
-        }
-
-        case DIVMM:{
-            vm_mm_op(vm, instruction, vm_div);
-            break;
-        }
-
-        case DIVMR:{
-            vm_mr_op(vm, instruction, vm_div);
             break;
         }
 
@@ -296,28 +184,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case IMULRM:{
-            vm_rm_op(vm, instruction, vm_imul);
-            break;
-        }
-
         case IMULRR:{
             vm_rr_op(vm, instruction, vm_imul);
-            break;
-        }
-
-        case IMULML:{
-            vm_ml_op(vm, instruction, vm_imul);
-            break;
-        }
-
-        case IMULMM:{
-            vm_mm_op(vm, instruction, vm_imul);
-            break;
-        }
-
-        case IMULMR:{
-            vm_mr_op(vm, instruction, vm_imul);
             break;
         }
 
@@ -331,28 +199,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case IDIVRM:{
-            vm_rm_op(vm, instruction, vm_idiv);
-            break;
-        }
-
         case IDIVRR:{
             vm_rr_op(vm, instruction, vm_idiv);
-            break;
-        }
-
-        case IDIVML:{
-            vm_ml_op(vm, instruction, vm_idiv);
-            break;
-        }
-
-        case IDIVMM:{
-            vm_mm_op(vm, instruction, vm_idiv);
-            break;
-        }
-
-        case IDIVMR:{
-            vm_mr_op(vm, instruction, vm_idiv);
             break;
         }
 
@@ -432,14 +280,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-         case NOTM:{
-            uint32_t* address = &vm->memory[instruction & 0xffff];
-            vm_not(vm, address);
-            break;
-        }
-
-        case NOTR:{
-            uint32_t* reg = &vm->registers[instruction >> 20 & 0xf];
+        case NOT:{
+            const REGISTER reg = (instruction >> 20) & 0xf;
             vm_not(vm, reg);
             break;
         }
@@ -454,28 +296,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case ANDRM:{
-            vm_rm_op(vm, instruction, vm_and);
-            break;
-        }
-
         case ANDRR:{
             vm_rr_op(vm, instruction, vm_and);
-            break;
-        }
-
-        case ANDML:{
-            vm_ml_op(vm, instruction, vm_and);
-            break;
-        }
-
-        case ANDMM:{
-            vm_mm_op(vm, instruction, vm_and);
-            break;
-        }
-
-        case ANDMR:{
-            vm_mr_op(vm, instruction, vm_and);
             break;
         }
 
@@ -489,28 +311,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case ORRM:{
-            vm_rm_op(vm, instruction, vm_or);
-            break;
-        }
-
         case ORRR:{
             vm_rr_op(vm, instruction, vm_or);
-            break;
-        }
-
-        case ORML:{
-            vm_ml_op(vm, instruction, vm_or);
-            break;
-        }
-
-        case ORMM:{
-            vm_mm_op(vm, instruction, vm_or);
-            break;
-        }
-
-        case ORMR:{
-            vm_mr_op(vm, instruction, vm_or);
             break;
         }
 
@@ -524,28 +326,8 @@ void vm_cpu_cycle(vm_t* vm){
             break;
         }
 
-        case XORRM:{
-            vm_rm_op(vm, instruction, vm_xor);
-            break;
-        }
-
         case XORRR:{
             vm_rr_op(vm, instruction, vm_xor);
-            break;
-        }
-
-        case XORML:{
-            vm_ml_op(vm, instruction, vm_xor);
-            break;
-        }
-
-        case XORMM:{
-            vm_mm_op(vm, instruction, vm_xor);
-            break;
-        }
-
-        case XORMR:{
-            vm_mr_op(vm, instruction, vm_xor);
             break;
         }
 

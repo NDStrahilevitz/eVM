@@ -23,6 +23,33 @@ STACK:        0x0000 - 0x1fff
 Heap:         0x2000 - 0x5fff
 Data Segment: 0x6000 - 0x7fff   
 Code Segment: 0x8000 - 0xffff
+INSTRUCTIONS:
+
+The INSTRUCTIONS are the representations of OPCODES in an assembly file (.ec file).
+an INSTRUCTION may correspond directly to an OPCODE or may be translated to a variety of OPCODES
+depending on arguements provided.
+The corresponding OPCODE for an INSTRUCTION will start with the INSTRUCTION mnemonic.
+
+END => END
+NOP => NOP
+PUSH => PUSHI, PUSHL, PUSHR
+POP => POP
+LDR => LDR
+STR => STR
+MOV => MOVRI, MOVRL, MOVRR
+(The same translations apply to ADD, SUB, MUL, IMUL, DIV, IDIV, AND, OR, XOR)
+JMP => JMP
+JNZ => JNZ
+JZ  => JZ   
+JG  => JG   
+JGE => JGE   
+JL  => JL   
+JLE => JLE   
+JA  => JA   
+JAE => JAE  
+JB  => JB   
+JBE => JBE 
+
 
 OPERATIONS:
 
@@ -95,7 +122,6 @@ AND:
 ANDRI: Logical end between immediate value to REGISTER
 ANDRL: Logical end between 32bit value to REGISTER
 ANDRR: Logical end between REGISTER to REGISTER
-ANDRM: Logical end between value from memory to REGISTER
 
 (Same opcode specification OR and XOR instruction)
 

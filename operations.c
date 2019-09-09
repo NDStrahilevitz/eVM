@@ -32,12 +32,12 @@ void vm_mov(vm_t* vm, const REGISTER dest, const uint32_t arg){
     vm->registers[dest] = arg;
 }
 
-void vm_ldr(vm_t* vm, const REGISTER dest, const REGISTER addr_src){
-    vm->registers[dest] = vm->memory[vm->registers[addr_src]];
+void vm_ldr(vm_t* vm, const REGISTER dest, const REGISTER ptr_reg){
+    vm->registers[dest] = vm->memory[vm->registers[ptr_reg]];
 }
 
-void vm_str(vm_t* vm, const REGISTER addr_src, const REGISTER val_src){
-    vm->memory[vm->registers[addr_src]] = vm->registers[val_src];
+void vm_str(vm_t* vm, const REGISTER ptr_reg, const REGISTER val_reg){
+    vm->memory[vm->registers[ptr_reg]] = vm->registers[val_reg];
 }
 
 void vm_add(vm_t* vm, const REGISTER dest, const uint32_t arg){
@@ -177,16 +177,16 @@ void vm_xor(vm_t* vm, const REGISTER dest, const uint32_t arg){
 
 void vm_ri_op(vm_t* vm, uint32_t instruction, void (*ri_func)(vm_t*, const REGISTER, const uint32_t)){
     const uint32_t val = instruction & 0xfffff;
-    const REGISTER dest = instruction >> 20 & 0xf;
+    const REGISTER dest = (instruction >> 20) & 0xf;
     ri_func(vm, dest, val);
 }
 void vm_rl_op(vm_t* vm, uint32_t instruction, void (*rl_func)(vm_t*, const REGISTER, const uint32_t)){
     const uint32_t val = vm->memory[vm->registers[PC]++];
-    const REGISTER dest = instruction >> 20 & 0xf;
+    const REGISTER dest = (instruction >> 20) & 0xf;
     rl_func(vm, dest, val);
 }
 void vm_rr_op(vm_t* vm, uint32_t instruction, void (*rr_func)(vm_t*, const REGISTER, const uint32_t)){
-    const REGISTER dest_reg = instruction >> 20 & 0xf;
+    const REGISTER dest_reg = (instruction >> 20) & 0xf;
     const uint32_t val = vm->registers[instruction & 0xf];
     rr_func(vm, dest_reg, val);
 }

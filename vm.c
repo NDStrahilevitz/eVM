@@ -99,6 +99,18 @@ void vm_cpu_cycle(vm_t* vm){
             vm_pop(vm, reg);
         }
 
+        case LDR:{
+            REGISTER dest = (instruction >> 20) & 0xf;
+            REGISTER ptr = instruction & 0xf;
+            vm_ldr(vm, dest, ptr);
+        }
+
+        case STR:{
+            REGISTER ptr_reg = (instruction >> 20) & 0xf;
+            REGISTER val_reg = instruction & 0xf;
+            vm_str(vm, ptr_reg, val_reg);
+        }
+
         case MOVRI:{
             vm_ri_op(vm, instruction, vm_mov);
             break;

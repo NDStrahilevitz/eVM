@@ -2,7 +2,7 @@ ARCHITECTURE:
 
 Word size = 32 bit
 
-REGISTERS: 16 word sized registers, 12 General Use, Flags, Program Counter, Base Pointer and Stack Pointer
+REGISTERS: 16 word sized REGISTERs, 12 General Use, Flags, Program Counter, Base Pointer and STACK Pointer
 
 GENERAL USE:
 R0 - Accumulator, by standard stores return values.
@@ -19,7 +19,7 @@ OF - indicates wether the latest calculation overflowed.
 
 
 MEMORY: 2^16 addresses, all word sized. 
-Stack:        0x0000 - 0x1fff
+STACK:        0x0000 - 0x1fff
 Heap:         0x2000 - 0x5fff
 Data Segment: 0x6000 - 0x7fff   
 Code Segment: 0x8000 - 0xffff
@@ -28,14 +28,15 @@ OPERATIONS:
 
 The OPERATIONS are the machine specification for the assembly lagnuage INSTRUCTIONS, 
 for exmaple MOVRI is the specific OPERATION for a MOV INSTRUCTION with a REGISTER as destination and an IMMEDIATE VALUE as source.
+The INSTRUCTION SET is a RISC ISA, meaning there is no interaction with memory besides loading from it and jumping to it.
 
 Word sized, design:
                             32 bits
-|---------------------------------------------------------------|
-|          |  if is dest |             immediate                |         
-|  opcode  |   register  |            20 bit value              |
-|          |             |                                      |
-|---------------------------------------------------------------|
+|----------------------------------------------------------------|
+|          |  1st operard |             immediate                |         
+|  opcode  |   REGISTER   |            20 bit value              |
+|          |              |                                      |
+|----------------------------------------------------------------|
     8 bits    4 bits               20 bits
 
 Note that some INSTRUCTIONS may have an OPCODE for larger than 20bit values that will include a jump to the next ADDRESS stored in the CODE SEGMENT.
@@ -46,70 +47,55 @@ END:   Labels end of code
 NOP:   Move to next instruction
 
 PUSH:
-PUSHI: Pushes immediate value to stack
-PUSHL: Pushes 32bit value to stack
-PUSHR: Pushes value from register
-PUSHM: Pushes value from memory address
+PUSHI: Pushes immediate value to STACK
+PUSHL: Pushes 32bit value to STACK
+PUSHR: Pushes value from REGISTER
 
-POP:  
-POPR: Pops value to register
-POPM: Pops value to memory address
+POP:   Pops value from STACK to REGISTER
+
+LDR:   Moves value from MEMORY ADDRESS pointed to by the 2nd operand REGISTER 
+       to REGISTER in first operand.
+
+STR:   Stores into MEMORY ADDRESS pointed by the 1st operand REGISTER 
+       the value stored in the 2nd REGISTER in first operand.
 
 MOV:
-MOVRI: Moves immediate value to register
-MOVRL: Moves 32bit value to register
-MOVRR: Moves from register to register
-MOVRM: Moves from memory to register
-MOVMI: Moves immediate value to memory address
-MOVML: Moves 32bit value to memory address
-MOVMR: Moves from register to memory address
-MOVMM: Moves from memory to memory address
+MOVRI: Moves immediate value to REGISTER
+MOVRL: Moves 32bit value to REGISTER
+MOVRR: Moves from REGISTER to REGISTER
 
 ADD:
-ADDRI: Adds immediate value to register
-ADDRL: Adds 32bit value to register
-ADDRR: Adds from register to register
-ADDRM: Adds value from memory to register
-ADDML: Adds 32bit value to memory address
-ADDMR: Adds from register to memory address
-ADDMM: Adds value from memory to memory address
+ADDRI: Adds immediate value to REGISTER
+ADDRL: Adds 32bit value to REGISTER
+ADDRR: Adds from REGISTER to REGISTER
 
 (Same opcodes specification for SUB, MUL and DIV instructions)
 (MUL and DIV have corresponding IMUL and IDIV INSTRUCTIONS for signed calculations)
 
 CMP: 
-CMPRI: Compares immediate value to register
-CMPRL: Compares 32bit value to register
-CMPRR: Compares from register to register
-CMPRM: Compares value from memory to register
-CMPML: Compares 32bit value to memory address
-CMPMR: Compares from register to memory address
-CMPMM: Compares value from memory to memory address
+CMPRI: Compares immediate value to REGISTER
+CMPRL: Compares 32bit value to REGISTER
+CMPRR: Compares from REGISTER to REGISTER
 
-JMP:  Jumps to memory address
-JNZ:  Jumps to memory address if ZF = 0
-JZ:   Jumps to memory address if ZF = 1
-JG:   Signed > check, works if ZF = 0 and NF = OF
-JGE:  Signed >= check, works if NF = OF
-JL:   Signed < check, works if NF != OF
-JLE:  Signed <= check, works if ZF = 0 or NF != OF
-JA:   Unsigned > check, works if CF = 0
-JAE:  Unsigned >= check, works if CF = 0 or ZF = 1
-JB:   Unsigned < check, works if CF = 1
-JBE:  Unsigned >= check, works if CF = 1 or ZF = 1
+JMP:   Jumps to memory address
+JNZ:   Jumps to memory address if ZF = 0
+JZ:    Jumps to memory address if ZF = 1
+JG:    Signed > check, works if ZF = 0 and NF = OF
+JGE:   Signed >= check, works if NF = OF
+JL:    Signed < check, works if NF != OF
+JLE:   Signed <= check, works if ZF = 0 or NF != OF
+JA:    Unsigned > check, works if CF = 0
+JAE:   Unsigned >= check, works if CF = 0 or ZF = 1
+JB:    Unsigned < check, works if CF = 1
+JBE:   Unsigned >= check, works if CF = 1 or ZF = 1
 
-NOT:
-NOTR:  Logical NOT on value in register
-NOTM:  Logical NOT on value in memory address
+NOT:   Logical NOT on value in REGISTER
 
 AND:
-ANDRI: Logical end between immediate value to register
-ANDRL: Logical end between 32bit value to register
-ANDRR: Logical end between register to register
-ANDRM: Logical end between value from memory to register
-ANDML: Logical end between 32bit value to memory address
-ANDMR: Logical end between register to memory address
-ANDMM: Logical end between value from memory to memory address
+ANDRI: Logical end between immediate value to REGISTER
+ANDRL: Logical end between 32bit value to REGISTER
+ANDRR: Logical end between REGISTER to REGISTER
+ANDRM: Logical end between value from memory to REGISTER
 
 (Same opcode specification OR and XOR instruction)
 

@@ -88,7 +88,7 @@ void vm_cpu_cycle(vm_t* vm){
         }
 
         case PUSHR:{
-            uint32_t reg = instruction >> 20 & 0xf;
+            uint32_t reg = (instruction >> 20) & 0xf;
             uint32_t val = vm->registers[reg];
             vm_push(vm, val);
             break;

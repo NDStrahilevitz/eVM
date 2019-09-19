@@ -23,9 +23,11 @@ void vm_push(vm_t* vm, const uint32_t val){
 
 void vm_pop(vm_t* vm, const REGISTER dest){
     uint32_t sp_loc = vm->registers[SP]--;
-    uint32_t val = vm->memory[sp_loc];
-    vm->memory[sp_loc] = 0;
-    vm->memory[dest] = val;
+    if(sp_loc == 0)
+        exit(SEGMENTATION_FAULT);
+    uint32_t val = vm->memory[sp_loc - 1];
+    vm->memory[sp_loc - 1] = 0;
+    vm->registers[dest] = val;
 }
 
 void vm_mov(vm_t* vm, const REGISTER dest, const uint32_t arg){
@@ -122,8 +124,6 @@ void vm_cmp(vm_t* vm, const REGISTER dest, const uint32_t arg){
 void vm_jmp(vm_t* vm, const uint32_t address, const uint8_t cond){
     if(cond)
         vm->registers[PC] = address;
-    else
-        ++vm->registers[PC];
 }
 
 void vm_not(vm_t* vm, const REGISTER dest){

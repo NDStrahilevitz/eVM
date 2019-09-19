@@ -1,13 +1,11 @@
 #include "vm.h"
-#include "stdio.h"
 
 
 int main(){
     vm_t* vm = vm_create();
-    vm_set_flag(vm, CF);
-    vm_set_flag(vm, ZF);
-    vm_set_flag(vm, OF);
-    vm_set_flag(vm, NF);
+    read_program_from_file(vm, "res.evm");
+    vm_start(vm);
+    vm_run(vm);
     print_vm_details(vm);
     vm_destroy(vm);
 }

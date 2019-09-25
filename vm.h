@@ -1,7 +1,8 @@
 #ifndef VM_H_
 #define VM_H_
 
-#include "stdint.h"
+#include <stdint.h>
+#include <stdio.h>
 
 //opcodes definition
 typedef enum{
@@ -73,6 +74,11 @@ int vm_read_flag(const vm_t* vm, FLAG flag);
 void vm_set_flag(vm_t* vm, FLAG flag);
 
 void print_vm_details(vm_t* vm);
+
+void read_program_from_file(vm_t* vm, const char* path);
+void read_program_to_mem(vm_t* vm, FILE* f);
+
+void vm_start(vm_t* vm);
 
 void vm_run(vm_t* vm);
 void vm_cpu_cycle(vm_t* vm);

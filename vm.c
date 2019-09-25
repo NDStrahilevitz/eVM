@@ -1,14 +1,15 @@
-#include "stdlib.h"
-#include "stdio.h"
+#include <stdlib.h>
+#include <string.h>
 
-#include "vm.h"
 #include "operations.h"
+#include "vm.h"
 #include "exitcodes.h"
 
 
 vm_t* vm_create(){
     vm_t* new_vm = (vm_t*)malloc(sizeof(vm_t));
-    new_vm->running = 0;
+
+    memset(new_vm, 0, sizeof(vm_t));
 
     return new_vm;
 }
@@ -52,8 +53,25 @@ void print_vm_details(vm_t* vm){
     printf("ZF:     %d\n", vm_read_flag(vm, ZF));
     printf("NF:     %d\n", vm_read_flag(vm, NF));
     printf("CF:     %d\n", vm_read_flag(vm, CF));
+}
+
+void read_program_to_mem(vm_t* vm, FILE* f){
+    uint32_t* p = &vm->memory[0x8000];
+    while (fscanf(f,"%x",p++)==1);      
+}
+void read_program_from_file(vm_t* vm, const char* path){
+    FILE* f = fopen( path, "r");
+
+    if(f == NULL){
+        exit(FAILED_TO_READ_FILE);
+    }
     
-    
+    read_program_to_mem(vm, f);
+}
+
+void vm_start(vm_t* vm){
+    vm->running = 1;
+    vm->registers[PC] = 0x8000;
 }
 
 void vm_run(vm_t* vm){
@@ -63,7 +81,8 @@ void vm_run(vm_t* vm){
 void vm_cpu_cycle(vm_t* vm){
     uint32_t instruction = vm->memory[vm->registers[PC]++];
     uint32_t opcode = instruction >> 24 & 0xff;
-
+    printf("PC: %x\n", vm->registers[PC]);
+    printf("Instruction: %x Opcode: %u\n", instruction, opcode);
     switch(opcode){
         case END:{
             vm_end(vm);
@@ -88,7 +107,7 @@ void vm_cpu_cycle(vm_t* vm){
         }
 
         case PUSHR:{
-            uint32_t reg = instruction >> 20 & 0xf;
+            uint32_t reg = (instruction >> 20) & 0xf;
             uint32_t val = vm->registers[reg];
             vm_push(vm, val);
             break;
@@ -97,18 +116,21 @@ void vm_cpu_cycle(vm_t* vm){
         case POP:{
             REGISTER reg = (instruction >> 20) & 0xf;
             vm_pop(vm, reg);
+            break;
         }
 
         case LDR:{
             REGISTER dest = (instruction >> 20) & 0xf;
             REGISTER ptr = instruction & 0xf;
             vm_ldr(vm, dest, ptr);
+            break;
         }
 
         case STR:{
             REGISTER ptr_reg = (instruction >> 20) & 0xf;
             REGISTER val_reg = instruction & 0xf;
             vm_str(vm, ptr_reg, val_reg);
+            break;
         }
 
         case MOVRI:{
@@ -213,6 +235,21 @@ void vm_cpu_cycle(vm_t* vm){
 
         case IDIVRR:{
             vm_rr_op(vm, instruction, vm_idiv);
+            break;
+        }
+
+        case CMPRI:{
+            vm_ri_op(vm, instruction, vm_cmp);
+            break;
+        }
+
+        case CMPRL:{
+            vm_rl_op(vm, instruction, vm_cmp);
+            break;
+        }
+
+        case CMPRR:{
+            vm_rr_op(vm, instruction, vm_cmp);
             break;
         }
 

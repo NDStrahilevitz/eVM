@@ -102,7 +102,7 @@ void vm_idiv(vm_t* vm, const REGISTER dest, const uint32_t arg){
 
 void vm_cmp(vm_t* vm, const REGISTER dest, const uint32_t arg){
     uint32_t destVal = vm->registers[dest];
-    uint32_t res = vm->registers[dest] -= arg;
+    uint32_t res = vm->registers[dest] - arg;
     if(res >> 31)
         vm_set_flag(vm, NF);
     else

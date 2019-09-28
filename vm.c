@@ -7,9 +7,7 @@
 
 
 vm_t* vm_create(){
-    vm_t* new_vm = (vm_t*)malloc(sizeof(vm_t));
-
-    memset(new_vm, 0, sizeof(vm_t));
+    vm_t* new_vm = (vm_t*)calloc(1, sizeof(vm_t));
 
     return new_vm;
 }
